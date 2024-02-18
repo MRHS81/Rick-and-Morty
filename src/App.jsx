@@ -2,21 +2,16 @@ import "./App.css";
 import Navbar, { Favorites, NavbarResult, Search } from "./components/Navbar";
 import CharactersList from "./components/CharactersList";
 import CharacterDetail from "./components/CharacterDetail";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Toaster } from "react-hot-toast";
 import useCharacters from "./hooks/useCharacters";
+import useLocalStorage from "./hooks/useLocalStorage";
 
 function App() {
   const [query, setQuery] = useState("");
   const { isLoading, characters } = useCharacters(query);
   const [selectedId, setSelectedId] = useState(null);
-  const [favorites, setFavorites] = useState(
-    () => JSON.parse(localStorage.getItem("favorites")) || []
-  );
-
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites]);
+  const [favorites, setFavorites] = useLocalStorage("favorites", []);
 
   const isAddedToFavorite = favorites.map((fav) => fav.id).includes(selectedId);
 
